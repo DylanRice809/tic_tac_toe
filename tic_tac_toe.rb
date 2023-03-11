@@ -22,7 +22,7 @@ module CheckFunctions
   end
 
   def win_condition_diagonal (board, diagonal_1=[], diagonal_2=[], diagonals=[])
-    iterator_array = [0,1,2]
+    iterator_array = [0..2]
     for i in iterator_array
       diagonal_1 << board[i][i]
     end
@@ -36,6 +36,12 @@ module CheckFunctions
 
   def check_all_conditions (board)
     win_condition_x(board) || win_condition_y(board) || win_condition_diagonal(board) ? true : false
+  end
+
+  def check_truthy (board)
+    board.all? do |row|
+      row.all? { |element| element == "X" || element == "O" }
+    end
   end
 end
 
@@ -64,23 +70,26 @@ class Game
     end
     if @player_1_turn
       @board_array[player_choice[0]][player_choice[1]] = "X"
-      player_1_turn = false
+      @player_1_turn = false
     else
       @board_array[player_choice[0]][player_choice[1]] = "O"
-      player_1_turn = true
+      @player_1_turn = true
     end
   end
 
   def play_game ()
-    p check_all_conditions(@board_array)
+    display_board()
+    while check_all_conditions(@board_array) == false && check_truthy(@board_array) == false
+      take_turn()
+      display_board()
+    end
+    if check_truthy(@board_array) && check_all_conditions(@board_array) == false
+      puts "You draw."
+    else
+      puts "Congratulations! Player #{@player_1_turn ? 2 : 1} wins!"
+    end
   end
-
 end
 
 game_instance = Game.new
-game_instance.display_board()
-game_instance.take_turn()
-game_instance.take_turn()
-game_instance.take_turn()
-game_instance.display_board()
 game_instance.play_game
