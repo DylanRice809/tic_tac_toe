@@ -43,6 +43,10 @@ module CheckFunctions
       row.all? { |element| element == "X" || element == "O" }
     end
   end
+
+  def check_if_taken (input, board)
+    return true if board[input[0]][input[1]] == "X" || board[input[0]][input[1]] == "O"
+  end
 end
 
 # defines the board and methods for making moves
@@ -67,7 +71,7 @@ class Game
     loop do
       puts "Type row and column"
       player_choice = gets.chomp.split("").map! { |int| int.to_i }
-      break unless player_choice[0] > 2 || player_choice[0] < 0 || player_choice[1] > 2 || player_choice[1] < 0 
+      break unless player_choice[0] > 2 || player_choice[0] < 0 || player_choice[1] > 2 || player_choice[1] < 0 || check_if_taken(player_choice, @board_array)
     end
     if @player_1_turn
       @board_array[player_choice[0]][player_choice[1]] = "X"
