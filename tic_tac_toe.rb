@@ -45,7 +45,11 @@ module CheckFunctions
   end
 
   def check_if_taken (input, board)
-    return true if board[input[0]][input[1]] == "X" || board[input[0]][input[1]] == "O"
+    (board[input[0]][input[1]] == "X" || board[input[0]][input[1]] == "O") ? true : false
+  end
+
+  def check_if_valid (input)
+    (input[0] >= 0 && input[0] <= 2) || (input[1] >= 0 && input[1] <= 2) ? true : false
   end
 end
 
@@ -70,8 +74,10 @@ class Game
   def take_turn (player_choice=0)
     loop do
       puts "Type row and column"
-      player_choice = gets.chomp.split("").map! { |int| int.to_i }
-      break unless player_choice[0] > 2 || player_choice[0] < 0 || player_choice[1] > 2 || player_choice[1] < 0 || check_if_taken(player_choice, @board_array)
+      player_choice = gets.chomp.split("")
+      next unless ["0","1","2"].include?(player_choice[0]) && ["0","1","2"].include?(player_choice[1])
+      player_choice.map! { |element| element.to_i }
+      break unless check_if_taken(player_choice, @board_array)
     end
     if @player_1_turn
       @board_array[player_choice[0]][player_choice[1]] = "X"
@@ -88,6 +94,7 @@ class Game
     while check_all_conditions(@board_array) == false && check_truthy(@board_array) == false
       take_turn()
       display_board()
+      puts "Player #{@player_1_turn ? 1 : 2}'s turn"
     end
     if check_truthy(@board_array) && check_all_conditions(@board_array) == false
       puts "You draw."
