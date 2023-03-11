@@ -49,6 +49,7 @@ end
 class Game
   include CheckFunctions
 
+  private
   def initialize
     @board_array = Array.new(3) { Array.new(3, '_') }
     @player_1_turn = true
@@ -77,6 +78,7 @@ class Game
     end
   end
 
+  public
   def play_game ()
     display_board()
     while check_all_conditions(@board_array) == false && check_truthy(@board_array) == false
